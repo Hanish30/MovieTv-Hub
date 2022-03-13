@@ -47,7 +47,7 @@ import Button from '@mui/material/Button';
                 color : "#fff",
                }}
                className="searchBox"
-               label="Search" 
+               label="Enter your country's 2 word name ex us , in , uk " 
                variant="filled"
                 onChange={(event) => {
                          setCountry(event.target.value);
