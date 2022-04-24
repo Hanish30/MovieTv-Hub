@@ -4,6 +4,10 @@ import SingleObject from "../../Components/SingleObject/SingleObject.js";
 import CustomPagination from "../../Components/Pagination/CustomPagination.js";
 import Genres from "../../Components/Genres.js";
 import "../../App.css";
+import SearchIcon from "@material-ui/icons/Search";
+import Button from '@mui/material/Button';
+import { createMuiTheme, ThemeProvider ,Tabs,Tab} from "@material-ui/core";
+import TextField from '@mui/material/TextField';
 import useGenres from "../../Hooks/useGenres.js";
 
 const Movies = () => {
@@ -12,9 +16,20 @@ const Movies = () => {
     const [numOfPages,setNumberOfPages]=useState(1);
     const [selectedGenres,setSelectedGenres]=useState([]);
     const [normalGenres,setNormalGenres]=useState([]);
+    const [country,setCountry]=useState("US");
     const genreforUrl=useGenres(selectedGenres);
+    const theme = createMuiTheme({
+        palette: {
+         primary: {
+          light: '#757ce8',
+          main: '#ffffff',
+          dark: '#002884',
+          contrastText: '#fff',
+                  },
+                },
+    });
     const fetchMovies= async () => {
-        const {data}= await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${process.env.React_App_API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=${page}&with_watch_monetization_types=flatrate&with_genres=${genreforUrl}`)
+        const {data}= await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${process.env.React_App_API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=${page}&with_watch_monetization_types=flatrate&with_genres=${genreforUrl}&with_origin_country=${country}`)
        // the above line fetches the data from the tmdb api.
        //used to set content as data.results numberOfPages as data.total_pages.
         setContent(data.results);
@@ -27,6 +42,27 @@ const Movies = () => {
     return (
         <div>
             <span className="pageTitle" style={{fontSize:"170%"}}>Movies</span>
+            <ThemeProvider theme={theme}>
+           <div style={{display:"flex",
+              margin:"15px 0",
+           }}>
+               <TextField 
+               style={{
+                flex : "1",
+                color : "#fff",
+               }}
+               className="searchBox"
+               label="Enter the 2 letter code of your country ex IN , US , UK" 
+               variant="filled"
+                onChange={(event) => {
+                         setCountry(event.target.value);
+                   }}
+                   onKeyPress={fetchMovies}
+               />
+               <Button variant="contained" style={{marginLeft:10, backgroundColor:"#39445a"}} 
+               color="primary" onClick={fetchMovies}><SearchIcon/></Button>
+            </div>
+        </ThemeProvider>
             <Genres
             //genres available for movies are dispalyed to the user
                 type="movie" 
