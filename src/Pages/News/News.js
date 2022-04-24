@@ -23,12 +23,14 @@ import Button from '@mui/material/Button';
               },
   });
     const fetchNews= async () => {
-        const {data}= await axios.get(`https://newsapi.org/v2/top-headlines?country=${country}&page=${page}&category=entertainment&apiKey=6572fbb6c1744c279dd5b82448266c97`);
+        
+        const {data}= await axios.get(`https://gnews.io/api/v4/top-headlines?token=${process.env.React_App_NEWAPI}&lang=en&country=${country}&topic=entertainment&page=${page}`);
        // the above line fetches the data from the tmdb api.
        //used to set content as data.results numberOfPages as data.total_pages.
        console.log(data);
         setContent(data.articles);
-        setNumberOfPages(Math.floor(70/20)+1);
+        // setNumberOfPages(Math.floor(70/20)+1);
+        setNumberOfPages(Math.floor(20/20));
     }
     useEffect(() => {
         fetchNews();
@@ -47,7 +49,7 @@ import Button from '@mui/material/Button';
                 color : "#fff",
                }}
                className="searchBox"
-               label="Enter your country's 2 word name ex us , in , uk " 
+               label="Enter the 2 letter code of your country ex in , us , uk" 
                variant="filled"
                 onChange={(event) => {
                          setCountry(event.target.value);
@@ -65,10 +67,12 @@ import Button from '@mui/material/Button';
                        return <NewsItem key={objContent.publishedAt}
                         id={objContent.publishedAt}
                         title={objContent.title}
-                        author={objContent.author}
+                        // author={objContent.author}
+                        author={objContent.source.name}
                         overview={objContent.overview}
                         date={objContent.publishedAt}
-                        image={objContent.urlToImage}
+                        // image={objContent.urlToImage}
+                        image={objContent.image}
                         url={objContent.url}
                         />
                        
